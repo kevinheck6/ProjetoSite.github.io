@@ -7,6 +7,12 @@ server.listen()
 
 # we can use a loop here if we want to send more files
 client, addr = server.accept()
+
+print(f"connected to {addr}")
+data = client.recv(1024).decode('utf-8')
+print(f"The files that u can download are: {data}, which one would you like to download?")
+
+
 file_name = client.recv(1024).decode()
 print(file_name)
 file_size = client.recv(1024).decode()
