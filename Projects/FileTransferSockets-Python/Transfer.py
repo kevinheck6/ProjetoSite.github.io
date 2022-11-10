@@ -12,7 +12,7 @@ client.send(str(file_size).encode())  # Send the file size
 
 data = file.read()  # sending all the data
 client.sendall(data)
-client.send(b"<END>")  # So we know when the file end and everthing after is a new file
+client.send(b"<END>")  # So we know when the file end and everything after is a new file
 
 file.close()
 client.close()
