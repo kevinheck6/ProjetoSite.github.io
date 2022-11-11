@@ -33,6 +33,9 @@ while True:
     print(data)
     # Read File in binary
     file = open(path, 'rb')
+
+    #client.send(path.encode())
+
     line = file.read(1024)
     # Keep sending data to the client
     while (line):

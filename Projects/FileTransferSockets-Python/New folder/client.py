@@ -20,8 +20,12 @@ data = input('')
 # Sending data to the server
 server.send(data.encode())
 
+# Receiving data from server
+#data = server.recv(1024).decode('utf-8')
+#print(data + )
+
 # Write File in binary
-file = open('client-file.txt', 'wb')
+file = open(data, 'wb')
 
 # Keep receiving data from the server
 line = server.recv(1024)
