@@ -3,7 +3,6 @@ from os import listdir
 from os.path import isfile, join
 
 # Initialize Socket Instance
-
 server = socket.socket()
 print("Socket created successfully.")
 
@@ -34,12 +33,11 @@ while True:
     # Read File in binary
     file = open(path, 'rb')
 
-    #client.send(path.encode())
-
     line = file.read(1024)
     # Keep sending data to the client
-    while (line):
+    while line:
         client.send(line)
+
         line = file.read(1024)
 
     file.close()
