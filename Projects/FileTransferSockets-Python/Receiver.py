@@ -1,5 +1,5 @@
 import socket
-import tqdm
+
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(("localhost", 9999))  # when we have a server we bind, when we have a client we connect
@@ -11,20 +11,20 @@ client, addr = server.accept()
 print(f"connected to {addr}")
 data = client.recv(1024).decode('utf-8')
 print(f"The files that u can download are: {data}, which one would you like to download?")
+data = input(' -> ')
 
-
-file_name = client.recv(1024).decode()
+file_name = client.recv(1024).decode("utf-8", 'ignore')
 print(file_name)
-file_size = client.recv(1024).decode()
+file_size = client.recv(1024).decode("utf-8", 'ignore')
 print(file_size)
 
-file = open(file_name, "wb")
+file = open("files/images.png", "wb")
 
 file_bytes = b""
 
 done = False
 
-progress = tqdm.tqdm(unit="B", unit_scale=True, unit_divisor=1000, total=int(file_size))  # progress bar
+#progress = tqdm.tqdm(unit="B", unit_scale=True, unit_divisor=1000, total=int(file_size))  # progress bar
 
 while not done:  # Check if it`s finished
     data = client.recv(1024)
@@ -33,7 +33,7 @@ while not done:  # Check if it`s finished
     else:
         file_bytes += data
 
-    progress.update(1024)
+    #progress.update(1024)
 
 file.write(file_bytes)
 
