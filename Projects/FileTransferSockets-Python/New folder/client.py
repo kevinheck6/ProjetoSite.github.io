@@ -2,7 +2,7 @@ import socket
 
 # Initialize Socket Instance
 server = socket.socket()
-print ("Socket created successfully.")
+print("Socket created successfully.")
 
 # Defining port and host
 port = 8800
@@ -11,8 +11,14 @@ host = 'localhost'
 # Connect socket to the host and port
 server.connect((host, port))
 print('Connection Established.')
-# Send a greeting to the server
-server.send('A message from the client'.encode())
+
+# Receiving data from server
+data = server.recv(1024).decode('utf-8')
+print(f"The files that u can download are: {data}, which one would you like to download?")
+data = input('')
+
+# Sending data to the server
+server.send(data.encode())
 
 # Write File in binary
 file = open('client-file.txt', 'wb')
@@ -20,7 +26,7 @@ file = open('client-file.txt', 'wb')
 # Keep receiving data from the server
 line = server.recv(1024)
 
-while(line):
+while (line):
     file.write(line)
     line = server.recv(1024)
 
