@@ -30,6 +30,13 @@ while True:
     data = client.recv(1024).decode()
     path = "files/" + data
     print(data)
+<<<<<<< Updated upstream:Projects/FileTransferSockets-Python/New folder/server.py
+=======
+
+    # Send file size to client
+    client.send(str(os.path.getsize(path)).encode())
+
+>>>>>>> Stashed changes:Projects/FileTransferSockets-Python/server.py
     # Read File in binary
     file = open(path, 'rb')
 
