@@ -27,18 +27,32 @@ while True:
     file_names = [f for f in listdir("files") if isfile(join("files", f))]
 
     # convert it to string, encode it and send it to the Receiver
-    client.send(str(file_names).encode())
+    client.send(str(file_names).encode())  # 1 Sending
 
     # Get data from the client
-    data = client.recv(1024).decode()
+    data = client.recv(1024).decode()  # 1 Received
     path = "files/" + data
     print(data)
 
     # Send file size to client
-    client.send(str(os.path.getsize(path)).encode())
+    client.send(str(os.path.getsize(path)).encode())  # 2 Sending ----
+
+    done = False
+    i = 1
+    while not done:
+        if i == 1:
+            done = client.recv(1024).decode()  # Received 2 4 5
+        print(done)
+        data = client.recv(1024).decode()  # Received 3 5
+        path = "files/" + data
+        client.send(str(os.path.getsize(path)).encode())  # 3 Sent
+        done = client.recv(1024).decode()  # Received 4
+        i = 1
+        if done == 'False':
+            i = 2
 
     # Get data from the client
-    data = client.recv(1024).decode()
+    data = client.recv(1024).decode()  # 5 Received after loop
     path = "files/" + data
     print(data)
 
@@ -48,7 +62,7 @@ while True:
 
     # Keep sending data to the client
     while line:
-        client.send(line)
+        client.send(line)  # 3 Sending
 
         line = file.read(1024)
 
