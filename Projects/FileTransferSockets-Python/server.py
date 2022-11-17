@@ -35,7 +35,7 @@ while True:
     print(data)
 
     # Send file size to client
-    client.send(str(os.path.getsize(path)).encode())  # 2 Sending ----
+    client.send(str(os.path.getsize(path)).encode())  # 2 Sent ----
 
     done = False
     i = 1
