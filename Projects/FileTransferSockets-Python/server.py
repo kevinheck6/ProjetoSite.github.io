@@ -26,35 +26,27 @@ while True:
     # Files names
     file_names = [f for f in listdir("files") if isfile(join("files", f))]
 
-    # convert it to string, encode it and send it to the Receiver
-    client.send(str(file_names).encode())  # 1 Sending
 
-    # Get data from the client
-    data = client.recv(1024).decode()  # 1 Received
-    path = "files/" + data
-    print(data)
 
-    # Send file size to client
-    client.send(str(os.path.getsize(path)).encode())  # 2 Sent ----
+
+    def transfer():
+        print(file_names)
+        client.send(str(file_names).encode())  # 1 Sending 2
+        data = client.recv(1024).decode()  # 1 Received 3
+        path = "files/" + data
+        print(data)
+        client.send(str(os.path.getsize(path)).encode())  # 2 Sending 3
+        return path
+
 
     done = False
-    i = 1
     while not done:
-        if i == 1:
-            done = client.recv(1024).decode()  # Received 2 4 5
+        path = transfer()
+        done = client.recv(1024).decode()  # Received 2
         print(done)
-        data = client.recv(1024).decode()  # Received 3 5
-        path = "files/" + data
-        client.send(str(os.path.getsize(path)).encode())  # 3 Sent
-        done = client.recv(1024).decode()  # Received 4
-        i = 1
-        if done == 'False':
-            i = 2
 
-    # Get data from the client
-    data = client.recv(1024).decode()  # 5 Received after loop
-    path = "files/" + data
-    print(data)
+    print("it should not be possible")
+
 
     # Read File in binary
     file = open(path, 'rb')

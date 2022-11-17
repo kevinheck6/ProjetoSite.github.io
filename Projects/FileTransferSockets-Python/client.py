@@ -1,6 +1,8 @@
 import socket
 
 # Initialize Socket Instance
+from pip._internal.utils.filesystem import file_size
+
 server = socket.socket()
 print("Socket created successfully.")
 
@@ -12,40 +14,31 @@ host = 'localhost'
 server.connect((host, port))
 print('Connection Established.')
 
-# Receiving data from server
-file_names = server.recv(1024).decode('utf-8')  # 1 Received
-print(f"The files that u can download are: {file_names}, which one would you like to download?")
-dl_file = input('')
 
-# Sending data to the server
-server.send(dl_file.encode())  # 1 Sent
 
-# Receiving data size from server
-file_size = server.recv(1024).decode('utf-8')  # 2 Received ----
-print(f"The size of the file is: {file_size} bytes")
 
-# confirmation
-done = False
-first_response = True
-while not done:
-    if not first_response:
-        server.send(str(done).encode())  # Sent 2 4
-        server.send(dl_file.encode())  # sent 3 5
-        file_size = server.recv(1024).decode('utf-8')  # 3 Received
-        print(f"The size of the file is: {file_size} bytes")
+def transfer():
+    file_names = server.recv(1024).decode('utf-8')  # 1 Received 2
+    print(f"The files that u can download are: {file_names}, which one would you like to download?")
+    dl_file = input('')
+    server.send(dl_file.encode())  # 1 Sent 3
+    file_size = server.recv(1024).decode('utf-8')  # 2 Received --- 3
+    print(f"The size of the file is: {file_size} bytes")
     print(f"Are you sure you want to download it? Type 'y' to download or 'n' to  exit")
+    return dl_file
+
+
+done = False
+while not done:
+    dl_file = transfer()
     confirmation = input('')
     if confirmation == 'y':
         done = True
-        server.send(str(done).encode())  # 2 Sent 4
-        server.send(dl_file.encode())  # 3 Sent 5
-
+        server.send(str(done).encode())  # 2 sent 4
+        break
     elif confirmation == 'n':
-        print(f"The files that u can download are: {file_names}, which one would you like to download?")
-        dl_file = input('')
-        first_response = False
+        server.send(str(done).encode())  # 2 sent 4
 
-    #### FAZER WHILE NISSO ENQUANTO CONFIRMATION NAO FOR DIFERENTE DE Y FAZER TAL PERGUNTA
 
 # Write File in binary
 file = open(dl_file, 'wb')
