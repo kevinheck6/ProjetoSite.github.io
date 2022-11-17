@@ -3,6 +3,17 @@ import socket
 from os import listdir
 from os.path import isfile, join
 
+
+def transfer():
+    print(file_names)
+    client.send(str(file_names).encode())  # server is sending file names
+    data = client.recv(1024).decode()  # server is receiving the file name that he should send back
+    path = "files/" + data
+    print(data)
+    client.send(str(os.path.getsize(path)).encode())  # sending the file size
+    return path
+
+
 # Initialize Socket Instance
 server = socket.socket()
 print("Socket created successfully.")
@@ -14,8 +25,8 @@ host = ''
 # binding to the host and port, that`s what define it as a server
 server.bind((host, port))
 
-# Accepts up to 10 connections
-server.listen(10)
+# Accepts up to 100 connections
+server.listen(100)
 print('Socket is listening...')
 
 while True:
@@ -26,27 +37,11 @@ while True:
     # Files names
     file_names = [f for f in listdir("files") if isfile(join("files", f))]
 
-
-
-
-    def transfer():
-        print(file_names)
-        client.send(str(file_names).encode())  # 1 Sending 2
-        data = client.recv(1024).decode()  # 1 Received 3
-        path = "files/" + data
-        print(data)
-        client.send(str(os.path.getsize(path)).encode())  # 2 Sending 3
-        return path
-
-
-    done = False
-    while not done:
-        path = transfer()
-        done = client.recv(1024).decode()  # Received 2
+    done = "False"
+    while done == "False":
+        path = transfer()  # getting the final path from function
+        done = client.recv(1024).decode()  # getting the verification that the loop is over
         print(done)
-
-    print("it should not be possible")
-
 
     # Read File in binary
     file = open(path, 'rb')

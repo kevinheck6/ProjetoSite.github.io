@@ -1,7 +1,16 @@
 import socket
 
-# Initialize Socket Instance
-from pip._internal.utils.filesystem import file_size
+
+def transfer():
+    file_names = server.recv(1024).decode('utf-8')  # getting files names from server
+    print(f"The files that u can download are: {file_names}, which one would you like to download?")
+    dl_file = input('')  # choosing file
+    server.send(dl_file.encode())  # # sending name that should be downloaded
+    file_size = server.recv(1024).decode('utf-8')  # getting file size from server
+    print(f"The size of the file is: {file_size} bytes")
+    print(f"Are you sure you want to download it? Type 'y' to download or 'n' to  exit")
+    return dl_file
+
 
 server = socket.socket()
 print("Socket created successfully.")
@@ -14,31 +23,17 @@ host = 'localhost'
 server.connect((host, port))
 print('Connection Established.')
 
-
-
-
-def transfer():
-    file_names = server.recv(1024).decode('utf-8')  # 1 Received 2
-    print(f"The files that u can download are: {file_names}, which one would you like to download?")
-    dl_file = input('')
-    server.send(dl_file.encode())  # 1 Sent 3
-    file_size = server.recv(1024).decode('utf-8')  # 2 Received --- 3
-    print(f"The size of the file is: {file_size} bytes")
-    print(f"Are you sure you want to download it? Type 'y' to download or 'n' to  exit")
-    return dl_file
-
-
-done = False
-while not done:
-    dl_file = transfer()
-    confirmation = input('')
+done = "False"
+while done == "False":
+    dl_file = transfer()  # getting the name of the file that should be downloaded
+    confirmation = input('')  # confirmation that we should end the loop
     if confirmation == 'y':
-        done = True
+        done = "True"
         server.send(str(done).encode())  # 2 sent 4
         break
     elif confirmation == 'n':
+        done = "False"
         server.send(str(done).encode())  # 2 sent 4
-
 
 # Write File in binary
 file = open(dl_file, 'wb')
