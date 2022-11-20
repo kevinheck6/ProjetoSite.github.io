@@ -37,10 +37,10 @@ while True:
 
     def random_function(type):
         if type in ["energy", "humidity"]:
-            number = random.uniform(0, 100)
+            number = random.randrange(0, 100, 3)
 
         elif type == "temp":
-            number = random.uniform(-55, 150)
+            number = random.randrange(-55, 150, 2)
 
         else:
             number = bool(random.getrandbits(1))
@@ -55,8 +55,8 @@ while True:
         client.send(str(random_function("temp")).encode())
         client.send(str(random_function("energy")).encode())
         client.send(str(random_function("humidity")).encode())
-        # client.send(str(random_function("people")).encode())
-        # client.send(str(random_function("door")).encode())
+        client.send(str(random_function("people")).encode())
+        client.send(str(random_function("door")).encode())
 
     # # Files names
     # file_names = [f for f in listdir("files") if isfile(join("files", f))]

@@ -36,6 +36,14 @@ def check_limits(value, type):
     elif type == "change_humidity_limit":
         humidity = value
 
+    elif type == "people":
+        if value == "False":
+            print(f"There are no People taking care of the system!")
+
+    elif type == "door":
+        if value == "False":
+            print(f"There are no door open of the system!")
+
     else:  # Error case
         print("There is no command with such name")
 
@@ -48,8 +56,8 @@ def send_tick():
     check_limits(float(server.recv(1024).decode()), "temp")  # checking the temperature
     check_limits(float(server.recv(1024).decode()), "energy")  # checking the energy
     check_limits(float(server.recv(1024).decode()), "humidity")  # checking the humidity
-    # check_limits(server.recv(1024), "people")  # checking the people
-    # check_limits(server.recv(1024), "door")  # checking the door
+    check_limits(server.recv(1024).decode(), "people")  # checking the people
+    check_limits(server.recv(1024).decode(), "door")  # checking the door
 
 
 def threading_alarm():
