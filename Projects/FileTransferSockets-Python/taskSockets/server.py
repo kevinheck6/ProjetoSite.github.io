@@ -1,8 +1,8 @@
 import os
+import random
 import socket
 from os import listdir
 from os.path import isfile, join
-
 
 # def transfer():
 #     print(file_names)
@@ -35,7 +35,28 @@ while True:
     print('Connected with ', addr)
 
 
+    def random_function(type):
+        if type in ["energy", "humidity"]:
+            number = random.uniform(0, 100)
 
+        elif type == "temp":
+            number = random.uniform(-55, 150)
+
+        else:
+            number = bool(random.getrandbits(1))
+
+        print(number)
+        return number
+
+
+    command = client.recv(1024).decode()
+    if command == "alarm_tick":
+        # print(str(random_function("energ")))
+        client.send(str(random_function("temp")).encode())
+        client.send(str(random_function("energy")).encode())
+        client.send(str(random_function("humidity")).encode())
+        # client.send(str(random_function("people")).encode())
+        # client.send(str(random_function("door")).encode())
 
     # # Files names
     # file_names = [f for f in listdir("files") if isfile(join("files", f))]
