@@ -1,8 +1,8 @@
 import socket
-import threading
 import sched
 import time
-
+import select
+import sys
 
 # def transfer():
 #     file_names = server.recv(1024).decode('utf-8')  # getting files names from server
@@ -13,6 +13,9 @@ import time
 #     print(f"The size of the file is: {file_size} bytes")
 #     print(f"Are you sure you want to download it? Type 'y' to download or 'n' to  exit")
 #     return dl_file
+
+
+i = 0
 
 
 def check_limits(value, type):
@@ -44,45 +47,50 @@ def check_limits(value, type):
 
     elif type == "door":
         if value == "False":
-            print(f"There are no door open of the system!")
+            print(f"There are no doors open in the system!")
 
     else:  # Error case
         print("There is no command with such name")
 
 
 def send_tick():
+    global i
+    i = i + 1
+    print("Report number: " + str(i))
+    print(time.ctime())
     alarm_tick = "alarm_tick"
     server.send(str(alarm_tick).encode())  # sending alarm tick to server
 
-    # print((server.recv(1024).decode()))
-    #print(int(server.recv(1024).decode()))
-    #print(int(server.recv(1024).decode()))
-    # print(int(server.recv(1024).decode()))
-    # print((server.recv(1024).decode()))
-    # print((server.recv(1024).decode()))
-
-    check_limits(server.recv(1024).decode(), "temp")  # checking the temperature
-    check_limits(server.recv(1024).decode(), "energy")  # checking the energy
-    check_limits(server.recv(1024).decode(), "humidity")  # checking the humidity
-    #check_limits(server.recv(1024).decode(), "people")  # checking the people
-    #check_limits(server.recv(1024).decode(), "door")  # checking the door
-
-
-def threading_alarm():
-    threading.Timer(5.0, threading_alarm).start()
-    send_tick()
-    print("tick funfando")
+    info = server.recv(1024).decode()
+    temp, energy, humidity, people, door = info.split(' ')
+    check_limits(temp, "temp")
+    check_limits(energy, "energy")
+    check_limits(humidity, "humidity")
+    check_limits(people, "people")
+    check_limits(door, "door")
 
 
 def do_something(sc):
-    print("Doing stuff...")
+    print("###################################################################")
+    print("###################################################################")
+    print("   Getting information from the database     ")
     # do your stuff
     send_tick()
+
+    #
     sc.enter(2, 1, do_something, (sc,))
 
 
-
-
+# def timeout_input(timeout, prompt="", timeout_value=None):
+#     sys.stdout.write(prompt)
+#     sys.stdout.flush()
+#     ready, _, _ = select.select([sys.stdin], [], [], timeout)
+#     if ready:
+#         return sys.stdin.readline().rstrip('\n')
+#     else:
+#         sys.stdout.write('\n')
+#         sys.stdout.flush()
+#         return timeout_value
 
 
 server = socket.socket()
@@ -102,6 +110,9 @@ s = sched.scheduler(time.time, time.sleep)
 s.enter(5, 1, do_something, (s,))
 s.run()
 
+
+server.close()
+print('Connection Closed.')
 
 # done = "False"
 # while done == "False":
@@ -128,5 +139,7 @@ s.run()
 # print('File has been received successfully.')
 #
 # file.close()
-server.close()
-print('Connection Closed.')
+
+
+# netstat -ano | findstr :8800
+# taskkill /PID 17736 /F

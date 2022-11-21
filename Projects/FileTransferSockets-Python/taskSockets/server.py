@@ -7,10 +7,10 @@ from os.path import isfile, join
 
 def random_function(type):
     if type in ["energy", "humidity"]:
-        number = random.randrange(0, 100, 3)
+        number = random.randrange(0, 100, 1)
 
     elif type == "temp":
-        number = random.randrange(-55, 150, 2)
+        number = random.randrange(-55, 150, 1)
 
     else:
         number = bool(random.getrandbits(1))
@@ -23,11 +23,13 @@ def check_commands():
     command = client.recv(1024).decode()
     if command == "alarm_tick":
         # print(str(random_function("energ")))
-        client.send(str(random_function("temp")).encode())
-        client.send(str(random_function("energy")).encode())
-        client.send(str(random_function("humidity")).encode())
-        #client.send(str(random_function("people")).encode())
-        #client.send(str(random_function("door")).encode())
+
+        info = str(random_function("temp")) + " " + str(random_function("energy")) + " " + \
+               str(random_function("humidity")) + " " + str(random_function("people")) + " " + \
+               str(random_function("door"))
+
+        client.send(str(info).encode())
+
         check_commands()
     if command == "close":
         client.close()
