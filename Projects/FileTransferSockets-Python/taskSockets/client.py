@@ -2,17 +2,6 @@ import socket
 import time
 import threading
 
-# def transfer():
-#     file_names = server.recv(1024).decode('utf-8')  # getting files names from server
-#     print(f"The files that u can download are: {file_names}, which one would you like to download?")
-#     dl_file = input('')  # choosing file
-#     server.send(dl_file.encode())  # # sending name that should be downloaded
-#     file_size = server.recv(1024).decode('utf-8')  # getting file size from server
-#     print(f"The size of the file is: {file_size} bytes")
-#     print(f"Are you sure you want to download it? Type 'y' to download or 'n' to  exit")
-#     return dl_file
-
-
 report_number = 0
 temp_limit = 80
 energy_limit = 10
@@ -84,16 +73,16 @@ def normal():
         time.sleep(alarm_frequency)
         if not flag:
             print('#####################################')
-            main_menu()
 
 
 def get_input():
     global flag
-    keystrk = input('Press a key \n')
+    keystrk = input('Press a key to stop \n')
     # thread doesn't continue until key is pressed
-    print('You pressed: ', keystrk)
+    print('You are no longer monitoring the server')
+    print(' ')
     flag = False
-    print('flag is now:', flag)
+    main_menu()
 
 
 def run_automatically():
@@ -147,6 +136,7 @@ def limits_change():
         print("1. temperature, 2. humidity, 3. energy")
         limits_change()
 
+
 def alarm_change():
     global alarm_frequency
     print("Would you like to set alarm frequency to what value?(In seconds)")
@@ -184,7 +174,7 @@ def main_menu():
         print(f" the for the humidity above: {humidity_limit}, the energy bellow: {energy_limit} ")
         print(f" and if there is no one in the server and if there are no doors open")
         print("The alarm reports are going to start in 15 seconds!")
-        time.sleep(15)
+        time.sleep(1)
         print(" ")
         print("########################")
         run_automatically()
@@ -196,7 +186,7 @@ def main_menu():
         print("Thanks for using this service. We are closing the connection now!")
         server.close()
 
-    else:
+    if not user_input.isnumeric():
         print("This command is not available, please try a different one in 2 seconds.")
         time.sleep(2)
         print("###############################")
@@ -215,35 +205,3 @@ server.connect((host, port))
 print('Connection Established.')
 
 main_menu()
-# server.close()
-# print('Connection Closed.')
-
-# done = "False"
-# while done == "False":
-#     dl_file = transfer()  # getting the name of the file that should be downloaded
-#     confirmation = input('')  # confirmation that we should end the loop
-#     if confirmation == 'y':
-#         done = "True"
-#         server.send(str(done).encode())  # 2 sent 4
-#         break
-#     elif confirmation == 'n':
-#         done = "False"
-#         server.send(str(done).encode())  # 2 sent 4
-#
-# # Write File in binary
-# file = open(dl_file, 'wb')
-#
-# # Keep receiving data from the server
-# line = server.recv(1024)  # 3 received
-#
-# while line:
-#     file.write(line)
-#     line = server.recv(1024)
-#
-# print('File has been received successfully.')
-#
-# file.close()
-
-
-# netstat -ano | findstr :8800
-# taskkill /PID 17736 /F
