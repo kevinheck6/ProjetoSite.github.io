@@ -1,5 +1,7 @@
 import socket
 import threading
+import sched
+import time
 
 
 # def transfer():
@@ -19,14 +21,14 @@ def check_limits(value, type):
     humidity_limit = 20
 
     if type == "temp":
-        if value > temp_limit:
+        if int(value) > temp_limit:
             print(f"Throw water in the system!! The temperature is equal to {value}! It's on fire!")
     elif type == "humidity":
-        if value > humidity_limit:
+        if int(value) > humidity_limit:
             print(f"You threw too much water!! The humidity is equal to"
                   f" {value}%! You want the electric system to blow?!?")
     elif type == "energy":
-        if value < energy_limit:
+        if int(value) < energy_limit:
             print(f"We are almost out of energy! We only have {value}% left! Do something!!")
 
     elif type == "change_temperature":
@@ -53,11 +55,17 @@ def send_tick():
     server.send(str(alarm_tick).encode())  # sending alarm tick to server
 
     # print((server.recv(1024).decode()))
-    check_limits(float(server.recv(1024).decode()), "temp")  # checking the temperature
-    check_limits(float(server.recv(1024).decode()), "energy")  # checking the energy
-    check_limits(float(server.recv(1024).decode()), "humidity")  # checking the humidity
-    check_limits(server.recv(1024).decode(), "people")  # checking the people
-    check_limits(server.recv(1024).decode(), "door")  # checking the door
+    #print(int(server.recv(1024).decode()))
+    #print(int(server.recv(1024).decode()))
+    # print(int(server.recv(1024).decode()))
+    # print((server.recv(1024).decode()))
+    # print((server.recv(1024).decode()))
+
+    check_limits(server.recv(1024).decode(), "temp")  # checking the temperature
+    check_limits(server.recv(1024).decode(), "energy")  # checking the energy
+    check_limits(server.recv(1024).decode(), "humidity")  # checking the humidity
+    #check_limits(server.recv(1024).decode(), "people")  # checking the people
+    #check_limits(server.recv(1024).decode(), "door")  # checking the door
 
 
 def threading_alarm():
@@ -66,7 +74,19 @@ def threading_alarm():
     print("tick funfando")
 
 
+def do_something(sc):
+    print("Doing stuff...")
+    # do your stuff
+    send_tick()
+    sc.enter(2, 1, do_something, (sc,))
+
+
+
+
+
+
 server = socket.socket()
+
 print("Socket created successfully.")
 
 # Defining port and host
@@ -77,8 +97,11 @@ host = 'localhost'
 server.connect((host, port))
 print('Connection Established.')
 
-# threading_alarm()
-send_tick()
+s = sched.scheduler(time.time, time.sleep)
+
+s.enter(5, 1, do_something, (s,))
+s.run()
+
 
 # done = "False"
 # while done == "False":
