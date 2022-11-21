@@ -174,7 +174,7 @@ def main_menu():
         print(f" the for the humidity above: {humidity_limit}, the energy bellow: {energy_limit} ")
         print(f" and if there is no one in the server and if there are no doors open")
         print("The alarm reports are going to start in 15 seconds!")
-        time.sleep(1)
+        time.sleep(15)
         print(" ")
         print("########################")
         run_automatically()
