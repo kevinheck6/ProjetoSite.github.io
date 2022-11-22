@@ -29,6 +29,7 @@ def check_commands():
 
         check_commands()
     if command == "close":
+        print("Closing connection")
         client.close()
 
 

@@ -184,6 +184,7 @@ def main_menu():
 
     if user_input == "4":
         print("Thanks for using this service. We are closing the connection now!")
+        server.send(str("close").encode())
         server.close()
 
     if not user_input.isnumeric():
