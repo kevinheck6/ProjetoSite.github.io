@@ -31,6 +31,7 @@ def check_commands():
     if command == "close":
         print("Closing connection")
         client.close()
+        quit()
 
 
 # Initialize Socket Instance
